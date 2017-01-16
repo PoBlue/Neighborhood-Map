@@ -1,10 +1,17 @@
-function AppViewModel() {
-    this.firstName = ko.observable("hello");
-    this.lastName = ko.observable("world");
+var initLocation = {lat: 21.030708, lng: 105.852405};
 
-    this.fullText = ko.pureComputed(function() {
-    	return this.firstName() + " " + this.lastName();
-    }, this);
+function ViewModel() {
+	this.map = new google.maps.Map(document.getElementById('map'), {
+		center: initLocation,
+		zoom: 13
+	});
 }
 
-ko.applyBindings(new AppViewModel());
+
+function start(){
+	ko.applyBindings(new ViewModel());
+}
+
+function googleError() {
+	alert("failed to get google map resources");
+}
