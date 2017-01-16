@@ -11,8 +11,13 @@
 </head>
 <body>
 	<span></span>
+	<header>
+		<input type="text" id="filterInput" data-bind="textInput: filterText" placeholder="Search for names..">
+		<ul id="filter" data-bind="foreach: placesList">
+			<li data-bind="text: title"></li>
+		</ul>
+	</header>
 	<div class="map" id="map"></div>
-
 	<script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoxcb6Blia9PD7RWVuvsndj5R_Xzf2hCY&callback=start" onerror="googleError()"></script>
 </body>

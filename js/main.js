@@ -1,4 +1,6 @@
 var initLocation = {lat: 21.030708, lng: 105.852405};
+var wikiURL ='https://en.wikipedia.org/w/api.php?action=opensearch&format=json&callback=wikiCallBack&search=';
+
 var placesData = 
 [
 	{
@@ -32,7 +34,7 @@ var Place = function(data, map){
 	var self = this;
 	this.position = ko.observable(data.position);
 	this.title = ko.observable(data.title);
-	this.wiki = data.search;
+	this.wikiValue = data.search;
 	this.content = '<h3>' + self.title() + '</h3>';
 
 	this.marker = new google.maps.Marker({
@@ -40,38 +42,56 @@ var Place = function(data, map){
 		map: map,
 		title: self.title()
 	});
+
+	google.maps.event.addListener(self.marker, 'click', function(){
+		showInfo();
+	});
+
+	$.ajax({
+		url: wikiURL+self.wikiValue,
+		dataType: 'jsonp',
+		timeout: 1000
+	}).done(function(data) {
+		   self.content = '<h3>' + self.title() + '</h3>'+'<p>' + data[2][0] + '<span> more on' + '<a href=' + data[3][0] + ' target="blank"> Wikipedia</a></p>';
+	}).fail(function(jqXHR, textStatus){
+			alert("failed to get wikipedia resources");
+	});
+
+	function showInfo(){
+		infoWindow.setContent(self.content);
+		infoWindow.open(map, self.marker);
+	}	
 };
+
+
+var infoWindow; 
 
 function ViewModel() {
 	var self = this;
+
+	this.filterText = ko.observable("");
+	this.placesList = ko.observableArray([]);
+
+	this.fullName = ko.computed(function() {
+		console.log(self.filterText());
+		return self.filterText(); 
+	});
 
 	this.map = new google.maps.Map(document.getElementById('map'), {
 		center: initLocation,
 		zoom: 13
 	});
-
-	this.placesList = ko.observableArray([]);
-		placesData.forEach(function(data){
-
+	placesData.forEach(function(data){
 			var placeToAdd = new Place(data, self.map);
-			google.maps.event.addListener(placeToAdd.marker, 'click', function(){
-				self.clickPlace(placeToAdd);
-			});
-
 			self.placesList.push(placeToAdd);
 	});
 
-	var infoWindow = new google.maps.InfoWindow();	
-	this.clickPlace = function(place){
-		infoWindow.setContent(place.content);
-		infoWindow.open(this.map, place.marker);
-		place.animate();
-	};
 
 }
 
 
 function start(){
+	infoWindow = new google.maps.InfoWindow();	
 	ko.applyBindings(new ViewModel());
 }
 
