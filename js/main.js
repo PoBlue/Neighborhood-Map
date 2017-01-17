@@ -1,7 +1,7 @@
 var initLocation = {lat: 21.030708, lng: 105.852405};
 var wikiURL ='https://en.wikipedia.org/w/api.php?action=opensearch&format=json&callback=wikiCallBack&search=';
 var infoWindow; 
-var filterText = ko.observable("");
+var filterText = ko.observable('');
 
 var placesData = 
 [
@@ -46,6 +46,7 @@ var Place = function(data, map){
 	});
 
 	google.maps.event.addListener(self.marker, 'click', function(){
+		self.toggleBounce();
 		self.showInfo();
 	});
 
@@ -80,6 +81,20 @@ var Place = function(data, map){
 			self.marker.setMap(null);
 		}
 	});
+
+	this.toggleBounce = function() {
+		if (self.marker.getAnimation() !== null) 
+		{
+			self.marker.setAnimation(null);
+		} 
+		else 
+		{
+			self.marker.setAnimation(google.maps.Animation.BOUNCE);
+			setTimeout(function(){
+				self.marker.setAnimation(null);
+			}, 2000);
+		}
+	};
 };
 
 function ViewModel() {
@@ -106,6 +121,7 @@ function ViewModel() {
 
 	this.resultClickHandler = function(place, event){
 		self.isDrawed(false);
+		place.toggleBounce();
 		place.showInfo();
 	}
 
