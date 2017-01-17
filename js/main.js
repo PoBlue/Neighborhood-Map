@@ -41,6 +41,7 @@ var Place = function(data, map){
 
 	this.marker = new google.maps.Marker({
 		position: self.position(),
+		animation: google.maps.Animation.DROP,
 		title: self.title()
 	});
 
@@ -84,6 +85,7 @@ var Place = function(data, map){
 function ViewModel() {
 	var self = this;
 
+	this.isDrawed = ko.observable(false);
 	this.placesList = ko.observableArray([]);
 	this.map = initMap();
 
@@ -103,6 +105,7 @@ function ViewModel() {
 	});
 
 	this.resultClickHandler = function(place, event){
+		self.isDrawed(false);
 		place.showInfo();
 	}
 

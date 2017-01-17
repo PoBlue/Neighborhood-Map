@@ -1,10 +1,101 @@
+* { 
+	-webkit-box-sizing: border-box; 
+	-moz-box-sizing: border-box; 
+	-o-box-sizing: border-box; 
+	box-sizing: border-box; 
+	/* adds animation for all transitions */ 
+	-webkit-transition: .25s ease-in-out; 
+	-moz-transition: .25s ease-in-out; 
+	-o-transition: .25s ease-in-out; 
+	transition: .25s ease-in-out; 
+	margin: 0; 
+	padding: 0; 
+	-webkit-text-size-adjust: none; 
+} 
+
 html,
 body {
 	height: 100%;
 }
 
+#drawer-toggle { 
+	position: absolute; 
+	opacity: 0; 
+}
+
+#drawer-toggle-label { 
+	-webkit-touch-callout: none; 
+	-webkit-user-select: none; 
+	-khtml-user-select: none; 
+	-moz-user-select: none; 
+	-ms-user-select: none; 
+	user-select: none; 
+	left: 0px; 
+	height:50px; 
+	width: 50px; 
+	display: block; 
+	position: fixed; 
+	background: rgba(255,255,255,.0); 
+	z-index: 2; 
+} 
+
+#drawer-toggle-label:before { 
+	content: ''; 
+	display: block; 
+	position: absolute; 
+	height: 2px; 
+	width: 24px; 
+	background: #8d8d8d; 
+	left: 13px; 
+	top: 18px; 
+	box-shadow: 0 6px 0 #8d8d8d, 0 12px 0 #8d8d8d; 
+} 
+
+header { 
+	width: 100%; 
+	position: fixed; 
+	left: 0px; 
+	background: #efefef; 
+	padding: 10px 10px 10px 50px; 
+	font-size: 30px; 
+	line-height: 30px; 
+}
+
+#drawer { 
+	position: fixed; 
+	top: 0; 
+	left: -300px; 
+	height: 100%; 
+	width: 300px; 
+	background: #2f2f2f; 
+	overflow-x: hidden; 
+	overflow-y: scroll; 
+	padding: 20px; 
+	-webkit-overflow-scrolling: touch; 
+} 
+
+#drawer-toggle:checked ~ #drawer-toggle-label { 
+	height: 100%; 
+	width: calc(100% - 300px); 
+	background: rgba(255,255,255,.8); 
+} 
+
+#drawer-toggle:checked ~ #drawer-toggle-label, 
+#drawer-toggle:checked ~ header { 
+	left: 300px; 
+} 
+
+#drawer-toggle:checked ~ #drawer { 
+	left: 0px; 
+} 
+
+#drawer-toggle:checked ~ #map { 
+	margin-left: 300px; 
+}
+
 #map {
-	height: 80%;
+	top: 50px;
+	height: 100%;
 }
 
 #filterInput {
@@ -29,3 +120,23 @@ body {
 	color: black; 
 	display: block; 
 }
+
+@media screen and (min-width: 800px) {
+	#drawer {
+		left: 0px;
+	}
+
+	#map {
+		margin-left: 300px;
+	}
+
+	#drawer-toggle-label {
+		display: none;
+	}
+
+	header {
+		left: 250px;
+	}
+}
+
+
