@@ -5,9 +5,6 @@
 	<title>Map</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="css/main.css"/>
-	<script src="js/knockout-3.4.1.js"></script>
-	<script src="js/jquery-3.1.1.min.js"></script>
-	<script defer="defer" src="js/main.js"></script>
 </head>
 <body>
 	<input type="checkbox" id="drawer-toggle" name="drawer-toggle" data-bind="checked: isDrawed"/>
@@ -15,15 +12,18 @@
 
 	<header>MoMo's Map</header>
 
-   <nav id="drawer">
-   	<input type="text" id="filterInput" data-bind="textInput: filterText" placeholder="Search for names..">
-   	<ul id="filter" data-bind="foreach: filterList">
-   		<li class="result" data-bind="text: title, click: $parent.resultClickHandler"></li>
-   	</ul>
-   </nav>
+	<nav id="drawer">
+		<input type="text" id="filterInput" data-bind="textInput: filterText" placeholder="Search for names..">
+		<ul id="filter" data-bind="foreach: filterList">
+			<li class="result" data-bind="text: title, click: $parent.resultClickHandler"></li>
+		</ul>
+	</nav>
 
 	<div class="map" id="map"></div>
 	<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoxcb6Blia9PD7RWVuvsndj5R_Xzf2hCY&callback=start" onerror="googleError()"></script>
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoxcb6Blia9PD7RWVuvsndj5R_Xzf2hCY&callback=start" onerror="googleError()"></script>
 </body>
+<script src="js/knockout-3.4.1.js"></script>
+<script src="js/jquery-3.1.1.min.js"></script>
+<script defer="defer" src="js/main.js"></script>
 </html>
