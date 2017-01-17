@@ -1,5 +1,7 @@
 var initLocation = {lat: 21.030708, lng: 105.852405};
 var wikiURL ='https://en.wikipedia.org/w/api.php?action=opensearch&format=json&callback=wikiCallBack&search=';
+var infoWindow; 
+var filterText = ko.observable("");
 
 var placesData = 
 [
@@ -39,12 +41,11 @@ var Place = function(data, map){
 
 	this.marker = new google.maps.Marker({
 		position: self.position(),
-		map: map,
 		title: self.title()
 	});
 
 	google.maps.event.addListener(self.marker, 'click', function(){
-		showInfo();
+		self.showInfo();
 	});
 
 	$.ajax({
@@ -52,41 +53,66 @@ var Place = function(data, map){
 		dataType: 'jsonp',
 		timeout: 1000
 	}).done(function(data) {
-		   self.content = '<h3>' + self.title() + '</h3>'+'<p>' + data[2][0] + '<span> more on' + '<a href=' + data[3][0] + ' target="blank"> Wikipedia</a></p>';
+		  self.content = '<h3>' + self.title() + '</h3>'+'<p>' + data[2][0] + '<span> more on' + '<a href=' + data[3][0] + ' target="blank"> Wikipedia</a></p>';
 	}).fail(function(jqXHR, textStatus){
 			alert("failed to get wikipedia resources");
 	});
 
-	function showInfo(){
+	this.showInfo = function() {
 		infoWindow.setContent(self.content);
 		infoWindow.open(map, self.marker);
 	}	
+
+	this.visible = ko.computed(function(){
+		if (filterText().length > 0){
+			return (self.title().toLowerCase().indexOf(filterText().toLowerCase()) > -1);
+		}
+		else{
+			return true;
+		}
+	});
+
+	this.setMarker = ko.computed(function(){
+		if (self.visible()) {
+			self.marker.setMap(map);
+		} else {
+			self.marker.setMap(null);
+		}
+	});
 };
-
-
-var infoWindow; 
 
 function ViewModel() {
 	var self = this;
 
-	this.filterText = ko.observable("");
 	this.placesList = ko.observableArray([]);
+	this.map = initMap();
 
-	this.fullName = ko.computed(function() {
-		console.log(self.filterText());
-		return self.filterText(); 
+	placesData.forEach(function(data){
+		var placeToAdd = new Place(data, self.map);
+		self.placesList.push(placeToAdd);
 	});
 
-	this.map = new google.maps.Map(document.getElementById('map'), {
+	this.filterList = ko.computed(function() {
+		var filtered = [];
+		self.placesList().forEach(function(place){
+			if (place.visible()) {
+				filtered.push(place);
+			}
+		});	
+		return filtered;
+	});
+
+	this.resultClickHandler = function(place, event){
+		place.showInfo();
+	}
+
+}
+
+function initMap() {
+	return new google.maps.Map(document.getElementById('map'), {
 		center: initLocation,
 		zoom: 13
 	});
-	placesData.forEach(function(data){
-			var placeToAdd = new Place(data, self.map);
-			self.placesList.push(placeToAdd);
-	});
-
-
 }
 
 

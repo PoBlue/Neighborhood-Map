@@ -13,8 +13,8 @@
 	<span></span>
 	<header>
 		<input type="text" id="filterInput" data-bind="textInput: filterText" placeholder="Search for names..">
-		<ul id="filter" data-bind="foreach: placesList">
-			<li data-bind="text: title"></li>
+		<ul id="filter" data-bind="foreach: filterList">
+			<li class="result" data-bind="text: title, click: $parent.resultClickHandler"><button></button></li>
 		</ul>
 	</header>
 	<div class="map" id="map"></div>
