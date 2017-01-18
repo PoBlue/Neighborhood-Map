@@ -36,9 +36,9 @@ Open file `index.html` with browser
 Open app using *Python 2* by running the command in the terminal:
 
 ```
-`python -m SimpleHTTPServer 8080
+python -m SimpleHTTPServer 8080
 ```
-`
+
 And then open `http://localhost:8080/` with browser
 
 
